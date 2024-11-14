@@ -11,6 +11,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.function.BiFunction;
+
 import static javafx.scene.input.KeyEvent.KEY_PRESSED;
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
@@ -42,26 +44,23 @@ public class JavaFXApp extends Application {
     }
 
     private void compute (String operator) {
+        int number1 = getNumberFromTextField(txtNumber1);
+        int number2 = getNumberFromTextField(txtNumber2);
 
-        int result;
-        int number1 = getNumberFromTextField (txtNumber1);
-        int number2 = getNumberFromTextField (txtNumber2);
-
+        BiFunction<Integer, Integer, Integer> computation = (a, b) -> 0;
         switch (operator) {
             case PLUS:
-                result = computeAdd (number1, number2);
+                computation = this::computeAdd;
                 break;
             case MULTIPLY:
-                result = computeMultiply (number1, number2);
+                computation = this::computeMultiply;
                 break;
             case DIVIDE:
-                result = computeDivide (number1, number2);
+                computation = this::computeDivide;
                 break;
-            default:
-                result = 0;
         }
 
-        txtResult.setText (String.valueOf (result));
+        txtResult.setText(String.valueOf(computation.apply(number1, number2)));
     }
 
     EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent> () {
